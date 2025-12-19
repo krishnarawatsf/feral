@@ -1,7 +1,14 @@
 import { ChevronRight, Play, Shield, Award, Globe } from 'lucide-react';
 
-export const HeroSection = ({ heroSlides, currentSlide, setCurrentSlide }) => (
-  <section className="relative h-screen overflow-hidden bg-gradient-to-br from-blue-50 via-white to-sky-50">
+export const HeroSection = ({ heroSlides, currentSlide, setCurrentSlide }) => {
+  const slideImageMap = {
+    'Bengal Tiger': 'bengal tiger.jpeg',
+    'Indian Elephant': 'indian elephant.jpeg',
+    'Asiatic Lion': 'lion.jpeg'
+  };
+
+  return (
+    <section className="relative h-screen overflow-hidden bg-gradient-to-br from-blue-50 via-white to-sky-50">
     <div className="absolute inset-0">
       <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-blue-200 rounded-full blur-3xl opacity-30"></div>
       <div className="absolute bottom-1/4 left-1/4 w-96 h-96 bg-sky-200 rounded-full blur-3xl opacity-30"></div>
@@ -18,6 +25,10 @@ export const HeroSection = ({ heroSlides, currentSlide, setCurrentSlide }) => (
                 currentSlide === idx ? 'opacity-100 scale-100' : 'opacity-0 scale-75'
               }`}
             >
+              <div className="w-full max-w-4xl mx-auto mb-6">
+                <img src={slide.imageSrc || slideImageMap[slide.name] || `/images/${slide.name.toLowerCase()}.jpeg`} alt={slide.name} className="w-full h-56 object-cover object-center rounded-md shadow-md" />
+              </div>
+
               <span className="text-7xl font-light tracking-wide mb-4">{slide.name}</span>
               <span className="text-sm text-slate-500 tracking-widest font-sans uppercase flex items-center gap-2">
                 <Globe size={14} />
@@ -83,4 +94,5 @@ export const HeroSection = ({ heroSlides, currentSlide, setCurrentSlide }) => (
       ))}
     </div>
   </section>
-);
+  );
+};

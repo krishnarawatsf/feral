@@ -9,11 +9,42 @@ import { HomePage } from './pages/HomePage';
 import { CollectionPage } from './pages/CollectionPage';
 import { AtelierPage } from './pages/AtelierPage';
 import { ClubPage } from './pages/ClubPage';
+import { ProductModal } from './components/ProductModal';
+import { supabase } from './src/lib/supabase';
 
 const FeralWebsite = () => {
   const [scrolled, setScrolled] = useState(false);
   const [selectedAnimal, setSelectedAnimal] = useState(null);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [animals, setAnimals] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch products from Supabase
+  useEffect(() => {
+    const fetchAnimals = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('products')
+          .select('*')
+          .order('tier', { ascending: false });
+
+        if (error) {
+          console.error('Supabase error:', error);
+          // Fallback to hardcoded animals if fetch fails
+          setAnimals(defaultAnimals);
+        } else {
+          setAnimals(data || defaultAnimals);
+        }
+      } catch (err) {
+        console.error('Error fetching animals:', err);
+        setAnimals(defaultAnimals);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAnimals();
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -30,7 +61,7 @@ const FeralWebsite = () => {
     return () => clearInterval(timer);
   }, []);
 
-  const animals = [
+  const defaultAnimals = [
     {
       name: 'Bengal Tiger',
       region: 'West Bengal, India',
@@ -38,7 +69,7 @@ const FeralWebsite = () => {
       personality: 'Fearless leaders, powerful presences',
       price: '180',
       tier: 'signature',
-      image: 'BENGAL TIGER'
+      image: 'bengal tiger.jpeg'
     },
     {
       name: 'Indian Elephant',
@@ -47,7 +78,7 @@ const FeralWebsite = () => {
       personality: 'Thoughtful leaders, mentors',
       price: '180',
       tier: 'signature',
-      image: 'INDIAN ELEPHANT'
+      image: 'indian elephant.jpeg'
     },
     {
       name: 'Asiatic Lion',
@@ -56,7 +87,7 @@ const FeralWebsite = () => {
       personality: 'Brave visionaries, natural leaders',
       price: '180',
       tier: 'signature',
-      image: 'ASIATIC LION'
+      image: 'lion.jpeg'
     },
     {
       name: 'One-Horned Rhino',
@@ -65,7 +96,7 @@ const FeralWebsite = () => {
       personality: 'Determined, unstoppable spirits',
       price: '220',
       tier: 'rare',
-      image: 'ASSAM RHINO'
+      image: 'assam rhino.jpeg'
     },
     {
       name: 'Snow Leopard',
@@ -74,7 +105,7 @@ const FeralWebsite = () => {
       personality: 'Elegant achievers, independent thinkers',
       price: '220',
       tier: 'rare',
-      image: 'SNOW LEOPARD'
+      image: 'snow leopard.jpeg'
     },
     {
       name: 'Indian Peacock',
@@ -83,7 +114,7 @@ const FeralWebsite = () => {
       personality: 'Bold expressionists, creative souls',
       price: '250',
       tier: 'limited',
-      image: 'INDIAN PEACOCK'
+      image: 'indian peacock.jpeg'
     },
     {
       name: 'African Lion',
@@ -126,15 +157,25 @@ const FeralWebsite = () => {
         <TopBanner />
         <Navigation scrolled={scrolled} />
         
-        <div className="min-h-screen">
-          <Routes>
-            <Route path="/" element={<HomePage heroSlides={heroSlides} currentSlide={currentSlide} setCurrentSlide={setCurrentSlide} />} />
-            <Route path="/collection" element={<CollectionPage animals={animals} setSelectedAnimal={setSelectedAnimal} />} />
-            <Route path="/atelier" element={<AtelierPage />} />
-            <Route path="/club" element={<ClubPage />} />
-          </Routes>
-        </div>
+        {loading ? (
+          <div className="min-h-screen flex items-center justify-center">
+            <div className="text-center">
+              <div className="text-2xl font-light text-slate-900 mb-4">Loading...</div>
+              <div className="text-sm text-slate-600">Connecting to the collection</div>
+            </div>
+          </div>
+        ) : (
+          <div className="min-h-screen">
+            <Routes>
+              <Route path="/" element={<HomePage heroSlides={animals.slice(0, 3)} currentSlide={currentSlide} setCurrentSlide={setCurrentSlide} />} />
+              <Route path="/collection" element={<CollectionPage animals={animals} setSelectedAnimal={setSelectedAnimal} />} />
+              <Route path="/atelier" element={<AtelierPage />} />
+              <Route path="/club" element={<ClubPage />} />
+            </Routes>
+          </div>
+        )}
         
+        <ProductModal animal={selectedAnimal} onClose={() => setSelectedAnimal(null)} />
         <NewsletterSection />
         <Footer />
       </div>

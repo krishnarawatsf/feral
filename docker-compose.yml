@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  feral-frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: feral-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
+
+  # Optional: Backend service (when ready)
+  # feral-backend:
+  #   build:
+  #     context: ./backend
+  #     dockerfile: Dockerfile
+  #   container_name: feral-backend
+  #   ports:
+  #     - "5000:5000"
+  #   environment:
+  #     - NODE_ENV=production
+  #     - DATABASE_URL=postgresql://feral_user:12345@localhost:5432/feral_db
+  #   depends_on:
+  #     - postgres
+  #
+  # postgres:
+  #   image: postgres:15-alpine
+  #   container_name: feral-postgres
+  #   ports:
+  #     - "5432:5432"
+  #   environment:
+  #     - POSTGRES_DB=feral_db
+  #     - POSTGRES_USER=feral_user
+  #     - POSTGRES_PASSWORD=12345
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+
+# volumes:
+#   postgres_data:

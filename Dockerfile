@@ -1,0 +1,16 @@
+# Production stage
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Install serve to host static files
+RUN npm install -g serve
+
+# Copy pre-built dist folder
+COPY dist ./dist
+
+# Expose port
+EXPOSE 3000
+
+# Start the application
+CMD ["serve", "-s", "dist", "-l", "3000"]

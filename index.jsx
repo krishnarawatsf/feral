@@ -23,6 +23,13 @@ const FeralWebsite = () => {
   useEffect(() => {
     const fetchAnimals = async () => {
       try {
+        // Use fallback data if Supabase is not configured
+        if (!supabase) {
+          setAnimals(defaultAnimals);
+          setLoading(false);
+          return;
+        }
+
         const { data, error } = await supabase
           .from('products')
           .select('*')

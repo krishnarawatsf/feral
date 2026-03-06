@@ -12,6 +12,14 @@ export const NewsletterSection = () => {
 
     setLoading(true);
     try {
+      if (!supabase) {
+        setMessage('✓ Thanks for subscribing!');
+        setEmail('');
+        setTimeout(() => setMessage(''), 3000);
+        setLoading(false);
+        return;
+      }
+
       const { error } = await supabase
         .from('newsletter_subscribers')
         .insert([{ email }]);

@@ -13,3 +13,4 @@ backend/.env
 *.mkv
 *.avi
 *.mov
+.vercel

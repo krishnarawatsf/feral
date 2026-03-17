@@ -12,36 +12,5 @@
       "source": "/:path((?!api).*)",
       "destination": "/index.html"
     }
-  ],
-  "env": [
-    {
-      "key": "DB_HOST",
-      "description": "PostgreSQL database host"
-    },
-    {
-      "key": "DB_PORT",
-      "description": "PostgreSQL database port",
-      "value": "5432"
-    },
-    {
-      "key": "DB_NAME",
-      "description": "PostgreSQL database name"
-    },
-    {
-      "key": "DB_USER",
-      "description": "PostgreSQL database user"
-    },
-    {
-      "key": "DB_PASSWORD",
-      "description": "PostgreSQL database password"
-    },
-    {
-      "key": "JWT_SECRET",
-      "description": "JWT secret key for authentication"
-    },
-    {
-      "key": "NODE_ENV",
-      "value": "production"
-    }
   ]
 }
